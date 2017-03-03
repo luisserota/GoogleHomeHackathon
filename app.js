@@ -21,11 +21,6 @@ let bodyParser = require('body-parser');
 let app = express();
 app.use(bodyParser.json({type: 'application/json'}));
 
-app.get('/test', function(req, res){
-  console.log("yello");
-  res.send("test page");
-})
-
 function tOut(millis){
   setTimeout(function () {
     console.log('boo')
@@ -34,31 +29,92 @@ function tOut(millis){
   while (Date.now() < end) ;
 }
 
+function confirm_area_to_work_on(req, assistant) {
+  let text_to_speech = '<speak>'
+ + 'ok! Great. so now we\'re going to work on first learning how to make an "l" sound with your mouth. {instructions on making an l sound} How did that go for you? If it worked tell me yes.'
+ + '</speak>'
+ assistant.ask(text_to_speech);
+}
+
+function begin_activity(req, assistant) {
+    let text_to_speech = '<speak>'
+   + 'Awesome you got this. now we\'re going to try some repetition exercises. Say "L" three times. <break time="6"/> how did that go for you?'
+   + '</speak>'
+   assistant.ask(text_to_speech);
+}
+
+function word_activity(req, assistant) {
+  let text_to_speech = '<speak>'
+  + 'yay now we\'re doing words like "light" "lit" "learn" {add in word activity here} how did that go for you? say yes or no'
+  + '</speak>'
+  assistant.ask(text_to_speech);
+}
+
+function word_repetition(req, assistant) {
+  let text_to_speech = '<speak>'
+  + 'Say "Lit" five times. <break time="10"/> How did that go for you?'
+  + '</speak>'
+  assistant.ask(text_to_speech);
+}
+
+function phrase_activity(req, assistant) {
+  let text_to_speech = '<speak>'
+  + 'yay now phrase activity goes here. here\'s a phrase. try saying it.. put pause in here, how did that go for you now?'
+  + '</speak>'
+  assistant.ask(text_to_speech);
+}
+
+function phrase_repetition(req, assistant) {
+  let text_to_speech = '<speak>'
+  + 'great job! now try that five times. <break time="10"/> How\'d that work for you?'
+  + '</speak>'
+  assistant.ask(text_to_speech);
+}
+
+function problem_area(req, assistant) {
+  let text_to_speech = '<speak>'
+  + 'ok so let\'s start with some instruction about how to form a sound with your mouth. put your tongue on top of your mouth and form a shape .... {physical instruction} say that 3x- great! how did that work for you?'
+  + '</speak>'
+  assistant.ask(text_to_speech);
+}
+
 // [START YourAction]
 app.post('/', function (req, res) {
   const assistant = new Assistant({request: req, response: res});
-  console.log('Request headers: ' + JSON.stringify(req.headers));
-  console.log('Request body: ' + JSON.stringify(req.body));
+  // console.log('Request headers: ' + JSON.stringify(req.headers));
+  // console.log('Request body: ' + JSON.stringify(req.body));
 
   // Fulfill action business logic
   function responseHandler (assistant) {
     // Complete your fulfillment logic and send a response
-    let text_to_speech = '<speak>'
-   + 'Here are <say-as interpret-as="characters">SSML</say-as> samples. '
-   + 'I can pause <break time="3"/>. '
-   + 'I can speak in cardinals. Your position is <say-as interpret-as="cardinal">10</say-as> in line. '
-   + 'Or I can speak in ordinals. You are <say-as interpret-as="ordinal">10</say-as> in line. '
-   + 'Or I can even speak in digits. Your position in line is <say-as interpret-as="digits">10</say-as>. '
-   + 'I can also substitute phrases, like the <sub alias="World Wide Web Consortium">W3C</sub>. '
-   + 'Finally, I can speak a paragraph with two sentences. '
-   + '<p><s>This is sentence one.</s><s>This is sentence two.</s></p>'
-   + '</speak>'
-    assistant.tell(text_to_speech);
+    var intent = req.body.result.metadata.intentName;
+    console.log(intent);
+    switch (intent) {
+      case 'confirm_area_to_work_on':
+        confirm_area_to_work_on(req.body, assistant);
+        break;
+      case 'begin_activity':
+        begin_activity(req.body, assistant);
+        break;
+      case 'word_activity':
+        word_activity(req.body, assistant);
+        break;
+      case 'word_repetition':
+        word_repetition(req.body, assistant);
+        break;
+      case 'phrase_activity':
+        phrase_activity(req.body, assistant);
+        break;
+      case 'phrase_repetition':
+        phrase_repetition(req.body, assistant);
+        break;
+      case 'problem_area':
+        confirm_area_to_work_on(req.body, assistant);
+        break;
+    }
   }
-
   assistant.handleRequest(responseHandler);
 });
-// [END YourAction]
 
 if (module === require.main) {
   // [START server]
@@ -66,7 +122,6 @@ if (module === require.main) {
   let server = app.listen(process.env.PORT || 8080, function () {
     let port = server.address().port;
     console.log('App listening on port %s', port);
-    console.log("yo");
   });
   // [END server]
 }
