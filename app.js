@@ -31,49 +31,72 @@ function tOut(millis){
 
 function confirm_area_to_work_on(req, assistant) {
   let text_to_speech = '<speak>'
- + 'ok! Great. so now we\'re going to work on first learning how to make an "l" sound with your mouth. {instructions on making an l sound} How did that go for you? If it worked tell me yes.'
+ + 'Alright, repeat "L" a bunch of times. Pay attention to your tongue.'
+ + '<break time="4"/>'
+ + 'Did that work out for you?'
+ + '</speak>'
+ assistant.ask(text_to_speech);
+}
+
+function confirm_repitition(req, assistant) {
+  let text_to_speech = '<speak>'
+ + 'Okay, say it a bunch of times.'
+ + '<break time="4"/>'
+ + 'Cool. Want to move on?'
  + '</speak>'
  assistant.ask(text_to_speech);
 }
 
 function begin_activity(req, assistant) {
     let text_to_speech = '<speak>'
-   + 'Awesome you got this. now we\'re going to try some repetition exercises. Say "L" three times. <break time="6"/> how did that go for you?'
+   + 'Great. Let\'s move on to words. Try saying the word light and make sure you pay attention to that tongue position. Really sound out every letter, be dramatic with each sound if you want to. Land that "T"!'
+   + '<break time="4"/>'
+   + 'Feel good about that one?'
    + '</speak>'
-   assistant.ask(text_to_speech);
+   assistant.tell(text_to_speech);
 }
 
 function word_activity(req, assistant) {
   let text_to_speech = '<speak>'
-  + 'yay now we\'re doing words like "light" "lit" "learn" {add in word activity here} how did that go for you? say yes or no'
+  + 'Great. Now say the word "Lilac". Take your time. Think about touching your tongue to the spot behind your teeth.'
+  + '<break time="4"/>'
+  + 'All good?'
   + '</speak>'
   assistant.ask(text_to_speech);
 }
 
 function word_repetition(req, assistant) {
   let text_to_speech = '<speak>'
-  + 'Say "Lit" five times. <break time="10"/> How did that go for you?'
+  + 'Great. Repeat that a few times.'
+  + '<break time="4"/>'
+  + 'All good?'
   + '</speak>'
   assistant.ask(text_to_speech);
 }
 
 function phrase_activity(req, assistant) {
   let text_to_speech = '<speak>'
-  + 'yay now phrase activity goes here. here\'s a phrase. try saying it.. put pause in here, how did that go for you now?'
+  + 'Cool. Let\'s try a phrase. Say,  "lovely little ladies."'
+  + '<break time="4"/>'
+  + 'All good?'
   + '</speak>'
   assistant.ask(text_to_speech);
 }
 
 function phrase_repetition(req, assistant) {
   let text_to_speech = '<speak>'
-  + 'great job! now try that five times. <break time="10"/> How\'d that work for you?'
+  + 'Great. Go ahead and practice that a bunch of times in a row. Start speeding up. See how fast you can go.'
+  + '<break time="4"/>'
+  + 'Do you want to move on?'
   + '</speak>'
   assistant.ask(text_to_speech);
 }
 
 function problem_area(req, assistant) {
   let text_to_speech = '<speak>'
-  + 'ok so let\'s start with some instruction about how to form a sound with your mouth. put your tongue on top of your mouth and form a shape .... {physical instruction} say that 3x- great! how did that work for you?'
+  + 'Awesome. So let\'s start by doing some motor exercises. I got a little secret for you- the l sound is all about your tongue. So, first, put your tongue right where your teeth meets the roof of your mouth. Pay close attention to that feeling and say the letter L. Don\'t be afraid to take your time. I\'m not going anywhere.'
+  + '<break time="4"/>'
+  + 'Did that work out for you?'
   + '</speak>'
   assistant.ask(text_to_speech);
 }
@@ -93,6 +116,9 @@ app.post('/', function (req, res) {
       case 'confirm_area_to_work_on':
         confirm_area_to_work_on(req.body, assistant);
         break;
+      case 'confirm_repitition':
+        confirm_repitition(req.body, assistant);
+        break;
       case 'begin_activity':
         begin_activity(req.body, assistant);
         break;
@@ -109,7 +135,7 @@ app.post('/', function (req, res) {
         phrase_repetition(req.body, assistant);
         break;
       case 'problem_area':
-        confirm_area_to_work_on(req.body, assistant);
+        problem_area(req.body, assistant);
         break;
     }
   }
